@@ -7,38 +7,32 @@ function moveFile() {
   const [source, destination] = process.argv.slice(2);
 
   if (!source || !destination) {
-    console.error('Please provide source and destination paths.');
-
-    return;
+    return console.error('Please provide source and destination paths.');
   }
 
   const resolvedSource = path.resolve(source);
   const resolvedDestination = path.resolve(destination);
 
   if (resolvedSource === resolvedDestination) {
-    console.log('Source and destination paths are the same. No action taken.');
-
-    return;
+    return console.log(
+      'Source and destination paths are the same. No action taken.',
+    );
   }
 
   fs.stat(source, (sourceError, sourceStat) => {
     if (sourceError) {
-      console.error(`Error: Source path does not exist or is inaccessible.`);
-
-      return;
+      return console.error(
+        'Error: Source path does not exist or is inaccessible.',
+      );
     }
 
     if (!sourceStat.isFile()) {
-      console.error(`Error: Source is not a file.`);
-
-      return;
+      return console.error('Error: Source is not a file.');
     }
 
     fs.stat(destination, (destStatError, destStat) => {
       if (destStatError && destStatError.code !== 'ENOENT') {
-        console.error(`Error: Destination path check failed.`);
-
-        return;
+        return console.error('Error: Destination path check failed.');
       }
 
       const destPath =
@@ -48,10 +42,10 @@ function moveFile() {
 
       fs.rename(source, destPath, (renameError) => {
         if (renameError) {
-          console.error(`Error: Failed to move file.`, renameError);
-        } else {
-          console.log(`File moved successfully to ${destPath}`);
+          return console.error('Error: Failed to move file.', renameError);
         }
+
+        console.log(`File moved successfully to ${destPath}`);
       });
     });
   });
